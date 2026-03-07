@@ -37,3 +37,7 @@ rm vulnweb.xlsx vulnweb.csv
 combining
 cat master_subdomains.txt vulnweb.txt | sort -u > attack_surface.txt 
 {11}
+now Task 02 – Infrastructure & Tech Profiling
+using 
+whatweb http://vulnweb.com
+{12}
