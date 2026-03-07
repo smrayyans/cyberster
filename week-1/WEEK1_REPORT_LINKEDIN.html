@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Week 1 Red Team Report - Syed Muhammad Rayyan</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --ink: #0f172a;
+      --muted: #334155;
+      --brand: #0b3a53;
+      --brand-2: #1f7a8c;
+      --accent: #f59e0b;
+      --card: #ffffff;
+      --line: #dbe3ef;
+    }
+
+    @page {
+      size: A4;
+      margin: 16mm;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.45;
+      font-size: 13.5px;
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .cover {
+      min-height: 1120px;
+      background:
+        radial-gradient(circle at 10% 10%, #2a9d8f 0%, rgba(42,157,143,0) 40%),
+        radial-gradient(circle at 90% 85%, #e9c46a 0%, rgba(233,196,106,0) 35%),
+        linear-gradient(140deg, #0f172a 0%, #0b3a53 48%, #1f7a8c 100%);
+      color: #f8fafc;
+      border-radius: 18px;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+    }
+
+    .cover:before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1.2px solid rgba(255, 255, 255, 0.28);
+      border-radius: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 999px;
+      padding: 8px 14px;
+      letter-spacing: 0.8px;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 26px 0 8px;
+      font-size: 44px;
+      line-height: 1.05;
+      letter-spacing: 0.4px;
+      font-weight: 800;
+      max-width: 660px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #e2e8f0;
+      margin: 0;
+      max-width: 650px;
+    }
+
+    .profile-grid {
+      margin-top: 42px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      max-width: 640px;
+    }
+
+    .pill {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .pill b {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #cbd5e1;
+      margin-bottom: 3px;
+      font-weight: 600;
+    }
+
+    .pill span {
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .logo {
+      position: absolute;
+      right: 46px;
+      top: 46px;
+      width: 88px;
+      height: 88px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.35);
+      object-fit: cover;
+      background: #fff;
+      padding: 6px;
+    }
+
+    .cover-footer {
+      position: absolute;
+      bottom: 52px;
+      left: 48px;
+      right: 48px;
+      display: flex;
+      justify-content: space-between;
+      color: #dbeafe;
+      font-size: 12px;
+      border-top: 1px solid rgba(255,255,255,0.3);
+      padding-top: 12px;
+    }
+
+    .section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 14px;
+      break-inside: avoid;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 8px;
+      color: var(--brand);
+      line-height: 1.2;
+    }
+
+    h1 { font-size: 26px; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 16px; }
+
+    p { margin: 0 0 10px; color: var(--muted); }
+
+    ul, ol { margin: 0 0 10px 18px; color: var(--muted); }
+
+    .kpi {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .kpi-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      background: linear-gradient(180deg, #fff 0%, #f8fbff 100%);
+    }
+
+    .kpi-card b {
+      display: block;
+      font-size: 20px;
+      color: var(--brand);
+      margin-bottom: 2px;
+    }
+
+    .kpi-card span { font-size: 12px; color: var(--muted); }
+
+    .code {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 12px;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      border: 1px solid #0b2446;
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f0f7ff;
+      color: var(--brand);
+    }
+
+    .evidence {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .evidence img {
+      width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #f8fafc;
+      padding: 6px;
+    }
+
+    .note {
+      padding: 10px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      color: #7c2d12;
+      font-size: 12px;
+    }
+
+    .page-break { page-break-before: always; }
+  </style>
+</head>
+<body>
+  <div class="page cover">
+    <img src="content+inspo/logo.jpg" alt="Cyberster Logo" class="logo" />
+    <span class="badge">Authorized Training Engagement</span>
+    <h1 class="title">Advanced Recon and Attack Surface Mapping</h1>
+    <p class="subtitle">Cyberster Red Team Internship - Week 1 Technical Report</p>
+
+    <div class="profile-grid">
+      <div class="pill"><b>Prepared By</b><span>Syed Muhammad Rayyan</span></div>
+      <div class="pill"><b>Roll Number</b><span>CSI-BI-620</span></div>
+      <div class="pill"><b>Program</b><span>Cyberster Internship</span></div>
+      <div class="pill"><b>Track</b><span>Red Team</span></div>
+      <div class="pill"><b>Report Type</b><span>Week 1 Deliverable</span></div>
+      <div class="pill"><b>Classification</b><span>Training / Authorized</span></div>
+    </div>
+
+    <div class="cover-footer">
+      <span>Focus: Reconnaissance, OSINT, Surface Mapping</span>
+      <span>Prepared for learning and documentation</span>
+    </div>
+  </div>
+
+  <div class="page">
+    <section class="section">
+      <h2>1. Executive Summary</h2>
+      <p>
+        This report documents Week 1 red team training tasks focused on passive intelligence collection,
+        infrastructure fingerprinting, exposure checks, and live asset prioritization. The workflow aligns with
+        the internship tutorial and consolidates practical recon methodology into a reusable process.
+      </p>
+      <div class="kpi">
+        <div class="kpi-card"><b>4</b><span>Core Tasks Completed</span></div>
+        <div class="kpi-card"><b>5+</b><span>Recon Tools Covered</span></div>
+        <div class="kpi-card"><b>1</b><span>Structured Deliverable Set</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>2. Task Framework</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Objective</th>
+            <th>Primary Tools</th>
+            <th>Output</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Task 01</td>
+            <td>Passive OSINT and subdomain enumeration</td>
+            <td>Subfinder, Assetfinder, Amass, DNSDumpster, crt.sh</td>
+            <td>Master subdomain and attack surface list</td>
+          </tr>
+          <tr>
+            <td>Task 02</td>
+            <td>Infrastructure and technology profiling</td>
+            <td>WhatWeb, WHOIS, NSLookup, Dig, Google Dorks</td>
+            <td>Tech stack and DNS profile</td>
+          </tr>
+          <tr>
+            <td>Task 03</td>
+            <td>GitHub dorking and secret leak validation</td>
+            <td>GitHub search operators, history checks</td>
+            <td>Exposure risk summary</td>
+          </tr>
+          <tr>
+            <td>Task 04</td>
+            <td>Live host filtering and visual recon</td>
+            <td>Httprobe/Httpx, Aquatone/Gowitness</td>
+            <td>Live host shortlist + screenshots</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section page-break">
+      <h2>3. Task 01 - Passive OSINT and Subdomain Enumeration</h2>
+      <p>Cross-source enumeration is used to reduce blind spots and increase confidence in discovered assets.</p>
+      <div class="code">subfinder -d target.com -silent -o subfinder.txt
+assetfinder --subs-only target.com &gt; assetfinder.txt
+amass enum -passive -d target.com -o amass.txt
+cat subfinder.txt assetfinder.txt amass.txt | sort -u &gt; master_subdomains.txt
+wc -l master_subdomains.txt
+sort subfinder.txt assetfinder.txt amass.txt | uniq -c | sort -nr | head</div>
+      <div class="code">xlsx2csv dnsdumpster.xlsx &gt; dnsdump.csv
+grep -oE "[a-zA-Z0-9.-]+\.target\.com" dnsdump.csv | sort -u &gt; dnsdump.txt
+cat master_subdomains.txt dnsdump.txt crt_target.txt | sort -u &gt; attack_surface.txt</div>
+      <p><b>Operational insight:</b> repeated occurrence of the same asset across multiple tools indicates higher confidence and triage priority.</p>
+    </section>
+
+    <section class="section">
+      <h2>4. Task 02 - Infrastructure and Technology Profiling</h2>
+      <p>Fingerprinting helps identify relevant attack paths and probable defensive controls.</p>
+      <div class="code">whatweb https://sub.target.com &gt; tech.txt
+whois target.com &gt; whois.txt
+nslookup -type=A target.com
+nslookup -type=MX target.com
+nslookup -type=NS target.com
+nslookup -type=TXT target.com
+dig target.com ANY</div>
+      <div class="code">site:target.com inurl:phpinfo.php
+site:target.com filetype:env
+site:target.com inurl:robots.txt
+site:target.com filetype:bak
+site:target.com filetype:zip
+site:target.com intitle:"index of"</div>
+      <p><b>Expected documentation:</b> server/framework clues, DNS record mapping, CDN indicators, and any indexed sensitive resources.</p>
+    </section>
+
+    <section class="section page-break">
+      <h2>5. Task 03 - GitHub Dorking and Secret Leak Checks</h2>
+      <p>Public code and commit history are inspected for accidental credential exposure.</p>
+      <div class="code">org:targetorg "API_KEY"
+org:targetorg "PASSWORD"
+org:targetorg "AWS_SECRET"
+"target.com" "API_KEY"
+filename:.env "target"
+filename:settings.py "SECRET_KEY"</div>
+      <div class="code">git log -p
+git grep -i "password" $(git rev-list --all)
+git log -S "API_KEY" --all</div>
+      <p><b>Validation rule:</b> differentiate real secrets from placeholders, and always inspect previous commits for removed but recoverable values.</p>
+    </section>
+
+    <section class="section">
+      <h2>6. Task 04 - Live Asset Filtering and Visual Recon</h2>
+      <p>Focus recon on responsive targets to save time and surface high-value endpoints.</p>
+      <div class="code">cat attack_surface.txt | httprobe --prefer-https &gt; live-urls.txt
+# or
+cat attack_surface.txt | httpx -status-code -title -tech-detect -o live-httpx.txt
+
+cat live-urls.txt | aquatone -out ./aquatone_results
+# or
+gowitness file -f live-urls.txt --screenshot-path ./gowitness_screenshots</div>
+      <p><b>Report output should include:</b> total assets found, total live hosts, notable panels, and obvious exposure indicators.</p>
+    </section>
+
+    <section class="section">
+      <h2>7. Screenshot Evidence</h2>
+      <p>Placeholder syntax requested: <b>{1.png}</b>. Rendered evidence from local folder:</p>
+      <div class="evidence">
+        <img src="screenshots/1.png" alt="Evidence 1" />
+      </div>
+      <p>Use the same pattern for additional images: <b>{2.png}</b>, <b>{3.png}</b>, etc. and store files inside <b>screenshots/</b>.</p>
+    </section>
+
+    <section class="section">
+      <h2>8. Conclusion</h2>
+      <p>
+        Week 1 established a clean reconnaissance pipeline: discover, verify, profile, and prioritize.
+        This creates a defensible and professional attack surface baseline for future internship phases.
+      </p>
+      <div class="note">
+        Disclaimer: This deliverable is for authorized training environments only. No exploitation steps are included.
+      </div>
+    </section>
+  </div>
+</body>
+</html>

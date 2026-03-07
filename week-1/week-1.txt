@@ -1,0 +1,39 @@
+mkdir week-1
+cd week-1
+{1}
+subfinder -d vulnweb.com -o subfinder.txt
+{2}
+assetfinder --subs-only vulnweb.com > assetfinder.txt
+{3}
+merging results
+cat subfinder.txt assetfinder.txt | sort -u > master_subdomains.txt
+{4}
+counting
+wc -l master_subdomains.txt
+{5}
+Overlap Check by combining multiple subdomain files
+We will combine multiple subdomain files and process them to measure how often each subdomain appears across sources.
+sort subfinder.txt assetfinder.txt | uniq -c | sort -nr | head 
+{6}
+Part 2 Use DNS Dumpster and CRT.sh to find historical subdomains and SSL certificate leaks. 
+using crt_v2
+install it from github by
+git clone https://github.com/az7rb/crt.sh.git
+{7}
+now dns dumpster
+https://dnsdumpster.com/
+{8}
+save it to excel
+and install
+sudo apt install xlsx2csv
+{9}
+and convert
+xlsx2csv -a vulnweb.xlsx > vulnweb.csv
+after conversion do
+grep -oE "[a-zA-Z0-9.-]+\.vulnweb\.com" vulnweb.csv | sort -u > vulnweb.txt
+and remove useless files
+rm vulnweb.xlsx vulnweb.csv
+{10}
+combining
+cat master_subdomains.txt vulnweb.txt | sort -u > attack_surface.txt 
+{11}
