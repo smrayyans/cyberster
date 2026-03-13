@@ -1,0 +1,40 @@
+[92mvulnweb.com[0m[94m (FQDN)[0m [97m-->[0m [95mns_record[0m [97m-->[0m [92mns-11-b.gandi.net[0m[94m (FQDN)[0m
+[92mvulnweb.com[0m[94m (FQDN)[0m [97m-->[0m [95mns_record[0m [97m-->[0m [92mns-140-c.gandi.net[0m[94m (FQDN)[0m
+[92mvulnweb.com[0m[94m (FQDN)[0m [97m-->[0m [95mns_record[0m [97m-->[0m [92mns-105-a.gandi.net[0m[94m (FQDN)[0m
+[92mtestaspnet.vulnweb.com[0m[94m (FQDN)[0m [97m-->[0m [95ma_record[0m [97m-->[0m [92m44.238.29.244[0m[94m (IPAddress)[0m
+[92m44.224.0.0/11[0m[94m (Netblock)[0m [97m-->[0m [95mcontains[0m [97m-->[0m [92m44.238.29.244[0m[94m (IPAddress)[0m
+[92m16509[0m[94m (ASN)[0m [97m-->[0m [95mmanaged_by[0m [97m-->[0m [92mAMAZON-02 - Amazon.com, Inc.[0m[94m (RIROrganization)[0m
+[92m16509[0m[94m (ASN)[0m [97m-->[0m [95mannounces[0m [97m-->[0m [92m44.224.0.0/11[0m[94m (Netblock)[0m
+[92mns-11-b.gandi.net[0m[94m (FQDN)[0m [97m-->[0m [95ma_record[0m [97m-->[0m [92m213.167.230.12[0m[94m (IPAddress)[0m
+[92mns-11-b.gandi.net[0m[94m (FQDN)[0m [97m-->[0m [95maaaa_record[0m [97m-->[0m [92m2001:4b98:aaab::c[0m[94m (IPAddress)[0m
+[92m2001:4b98:aaaa::/47[0m[94m (Netblock)[0m [97m-->[0m [95mcontains[0m [97m-->[0m [92m2001:4b98:aaab::c[0m[94m (IPAddress)[0m
+[92m209453[0m[94m (ASN)[0m [97m-->[0m [95mmanaged_by[0m [97m-->[0m [92mAS209453[0m[94m (RIROrganization)[0m
+[92m209453[0m[94m (ASN)[0m [97m-->[0m [95mannounces[0m [97m-->[0m [92m2001:4b98:aaaa::/47[0m[94m (Netblock)[0m
+[92mvulnweb.com[0m[94m (FQDN)[0m [97m-->[0m [95ma_record[0m [97m-->[0m [92m44.228.249.3[0m[94m (IPAddress)[0m
+[92mns-140-c.gandi.net[0m[94m (FQDN)[0m [97m-->[0m [95ma_record[0m [97m-->[0m [92m217.70.187.141[0m[94m (IPAddress)[0m
+[92mns-140-c.gandi.net[0m[94m (FQDN)[0m [97m-->[0m [95maaaa_record[0m [97m-->[0m [92m2604:3400:aaac::8d[0m[94m (IPAddress)[0m
+[92mtestphp.vulnweb.com[0m[94m (FQDN)[0m [97m-->[0m [95ma_record[0m [97m-->[0m [92m44.228.249.3[0m[94m (IPAddress)[0m
+[92m213.167.230.0/24[0m[94m (Netblock)[0m [97m-->[0m [95mcontains[0m [97m-->[0m [92m213.167.230.12[0m[94m (IPAddress)[0m
+[92m44.224.0.0/11[0m[94m (Netblock)[0m [97m-->[0m [95mcontains[0m [97m-->[0m [92m44.228.249.3[0m[94m (IPAddress)[0m
+[92m217.70.187.0/24[0m[94m (Netblock)[0m [97m-->[0m [95mcontains[0m [97m-->[0m [92m217.70.187.141[0m[94m (IPAddress)[0m
+[92m2604:3400:aaac::/48[0m[94m (Netblock)[0m [97m-->[0m [95mcontains[0m [97m-->[0m [92m2604:3400:aaac::8d[0m[94m (IPAddress)[0m
+[92m209453[0m[94m (ASN)[0m [97m-->[0m [95mmanaged_by[0m [97m-->[0m [92mGANDI-LIVEDNS AS for LiveDNS Anycast servers, FR[0m[94m (RIROrganization)[0m
+[92m209453[0m[94m (ASN)[0m [97m-->[0m [95mannounces[0m [97m-->[0m [92m213.167.230.0/24[0m[94m (Netblock)[0m
+[92m209453[0m[94m (ASN)[0m [97m-->[0m [95mannounces[0m [97m-->[0m [92m217.70.187.0/24[0m[94m (Netblock)[0m
+[92m209453[0m[94m (ASN)[0m [97m-->[0m [95mannounces[0m [97m-->[0m [92m2604:3400:aaac::/48[0m[94m (Netblock)[0m
+[92mns-105-a.gandi.net[0m[94m (FQDN)[0m [97m-->[0m [95ma_record[0m [97m-->[0m [92m173.246.100.106[0m[94m (IPAddress)[0m
+[92mns-105-a.gandi.net[0m[94m (FQDN)[0m [97m-->[0m [95maaaa_record[0m [97m-->[0m [92m2001:4b98:aaaa::6a[0m[94m (IPAddress)[0m
+[92m2001:4b98:aaaa::/47[0m[94m (Netblock)[0m [97m-->[0m [95mcontains[0m [97m-->[0m [92m2001:4b98:aaaa::6a[0m[94m (IPAddress)[0m
+[92m173.246.100.0/23[0m[94m (Netblock)[0m [97m-->[0m [95mcontains[0m [97m-->[0m [92m173.246.100.106[0m[94m (IPAddress)[0m
+[92m209453[0m[94m (ASN)[0m [97m-->[0m [95mannounces[0m [97m-->[0m [92m173.246.100.0/23[0m[94m (Netblock)[0m
+[92mtesthtml5.vulnweb.com[0m[94m (FQDN)[0m [97m-->[0m [95ma_record[0m [97m-->[0m [92m44.228.249.3[0m[94m (IPAddress)[0m
+[92mwww.vulnweb.com[0m[94m (FQDN)[0m [97m-->[0m [95ma_record[0m [97m-->[0m [92m44.228.249.3[0m[94m (IPAddress)[0m
+[92mtestasp.vulnweb.com[0m[94m (FQDN)[0m [97m-->[0m [95ma_record[0m [97m-->[0m [92m44.238.29.244[0m[94m (IPAddress)[0m
+[92mrest.vulnweb.com[0m[94m (FQDN)[0m [97m-->[0m [95ma_record[0m [97m-->[0m [92m18.215.71.186[0m[94m (IPAddress)[0m
+[92mlocalhost.vulnweb.com[0m[94m (FQDN)[0m [97m-->[0m [95ma_record[0m [97m-->[0m [92m127.0.0.1[0m[94m (IPAddress)[0m
+[92m18.208.0.0/13[0m[94m (Netblock)[0m [97m-->[0m [95mcontains[0m [97m-->[0m [92m18.215.71.186[0m[94m (IPAddress)[0m
+[92m127.0.0.0/8[0m[94m (Netblock)[0m [97m-->[0m [95mcontains[0m [97m-->[0m [92m127.0.0.1[0m[94m (IPAddress)[0m
+[92m14618[0m[94m (ASN)[0m [97m-->[0m [95mmanaged_by[0m [97m-->[0m [92mAMAZON-AES - Amazon.com, Inc.[0m[94m (RIROrganization)[0m
+[92m14618[0m[94m (ASN)[0m [97m-->[0m [95mannounces[0m [97m-->[0m [92m18.208.0.0/13[0m[94m (Netblock)[0m
+[92m0[0m[94m (ASN)[0m [97m-->[0m [95mmanaged_by[0m [97m-->[0m [92mReserved Network Address Blocks[0m[94m (RIROrganization)[0m
+[92m0[0m[94m (ASN)[0m [97m-->[0m [95mannounces[0m [97m-->[0m [92m127.0.0.0/8[0m[94m (Netblock)[0m
