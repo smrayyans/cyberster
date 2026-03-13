@@ -1,0 +1,15 @@
+# Nmap 7.98 scan initiated Sat Mar 14 03:55:07 2026 as: /usr/lib/nmap/nmap -sU --top-ports 100 -oN results_udp.txt 192.168.0.172
+Nmap scan report for 192.168.0.172
+Host is up (0.0022s latency).
+Not shown: 93 closed udp ports (port-unreach)
+PORT     STATE         SERVICE
+53/udp   open          domain
+68/udp   open|filtered dhcpc
+69/udp   open|filtered tftp
+111/udp  open          rpcbind
+137/udp  open          netbios-ns
+138/udp  open|filtered netbios-dgm
+2049/udp open          nfs
+MAC Address: 5C:5F:67:EE:84:D2 (Intel Corporate)
+
+# Nmap done at Sat Mar 14 03:56:57 2026 -- 1 IP address (1 host up) scanned in 110.08 seconds

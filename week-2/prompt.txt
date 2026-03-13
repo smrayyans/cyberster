@@ -1,0 +1,310 @@
+i am doing pentester internship and its my 2nd week and i have given multiple tasks, u can find tasks in week-2/tasks+inspo/week2.pptx, u have to make md for github and pdf for linkedin, keep pdf formatting same as /home/rayyan-pc/Downloads/Github/cyberster/week-2/tasks+inspo/WEEK1_REPORT_LINKEDIN.pdf, same page 1 just some text changed, same colors formatting and stuff, and i have kept placeholders for images u have to actually place images there placed in screenshots/ folder, and u dont have to copy exact same wordings i have used also dont use any emoji, instead make them professional and keep point to point but organized full report. and below i have mentioned deliverabilities kindly look at them too, where i have noticed values between multiple scans, please make tables therer at the end i want an md file and a pdf file. 
+
+Week 02: Network Enumeration & Service Vulnerability Discovery
+Task 01: Advanced Network Scanning with Nmap 
+Objective: To transition from broad reconnaissance to targeted network scanning, identifying open ports, and fingerprinting services while avoiding basic security triggers
+first start the metasplotable 2 vm
+and get its ip 
+u can login with msfadmin:msfadmin and get ifconfig
+
+or u can run a nmap scan on your ip pool 
+u can get ip pool my 
+ip a
+{1}
+then running nmap
+nmap -sn 192.168.0.205/24
+{2}
+this is our metasploitable 2 machine ip
+192.168.0.172
+
+nmap -sT -p 1-1000 -oN results_sT.txt 192.168.0.172 
+-sT for TCP connect scan
+-p specifies port
+-oN for output in normal mode
+{3}
+What to record
+Open ports and services reported
+Scan duration (from nmap summary)
+Any differences in service names compared to later scans
+What to expect
+Nmap will show ports as open/closed/filtered.
+This scan completes full TCP sessions; target logs will often show connections.
+
+next
+2) SYN Stealth scan (-sS)
+sudo nmap -sS -p 1-1000 -oN results_sS.txt 192.168.0.172
+-sS for SYN stealth scan
+-p specifies port
+-oN for output in normal mode
+{4}
+What to record
+Open ports and services reported
+Scan duration
+Any ports that appear in one scan but not the other
+Interpretation
+Typically -sS is faster and may show the same open ports as -sT.
+If -sT shows additional ports, there may be inline filters/inspection 
+that treat full connects differently.
+
+now
+3) UDP scan (top 100 UDP ports)
+sudo nmap -sU --top-ports 100 -oN results_udp.txt 192.168.0.172
+{5}
+What to record
+UDP ports returned as open, closed, or open|filtered
+Scan duration (UDP scans are slower)
+Any services (DNS, SNMP, NTP) discovered
+Notes
+UDP is stateless: no handshake, so absence of response often means 
+open|filtered.
+Be patient; UDP scans can take much longer and may require retries.
+
+
+now
+4) Timing templates (-T2 vs -T4)
+sudo nmap -sS -T2 -p 1-1000 -oN sS_T2.txt 192.168.0.172
+{6}
+sudo nmap -sS -T4 -p 1-1000 -oN sS_T4.txt 192.168.0.172
+{7}
+What to record
+Duration for each run
+Any differences in ports reported
+Whether the faster scan missed anything or produced inconsistent results
+Guidance
+-T2 → slower, more polite (stealthier)
+-T4 → aggressive (faster but noisier, more likely to trigger alarms)
+
+we got that
+-sT took 7.22s
+-sS took 13.90s
+-sU took 12.57s
+-T4 took 0.73s
+-T2 took 401.02s
+{8}
+
+Task 02:
+After identifying open ports in Task 01, the next step is to determine what services are running on those ports and which versions they use.
+This process is called service fingerprinting. Knowing the exact version of a service helps security analysts identify known vulnerabilities associated with that software.
+nmap -sV 192.168.0.172 -oN results_sV.txt
+{9}
+we got tons of open ports with their versions
+
+now
+Part 2 — Aggressive Scan
+nmap -A 192.168.0.172 -oN results_A.txt
+{10}
+What -A Does
+It enables several advanced features:
+Feature	                                     Purpose
+OS Detection	                      Attempts to identify the operating system
+Version Detection	             Identifies service versions
+Script Scanning	               Runs default Nmap scripts
+Traceroute	                         Shows network path
+Part 3 — Manual Banner Grabbing
+Manually check a service to see what information it reveals.
+banner is the information a server sends when a connection is established
+Example banner
+220 ProFTPD 1.3.5 Server ready
+This tells us:
+Service → FTP
+Software → ProFTPD
+Version → 1.3.5
+nc 192.168.0.172 80
+then type
+HEAD / HTTP/1.0
+
+we will get this
+{11}
+Part 4 — SMB Enumeration (If Port 445 Is Open)
+enum4linux -a 192.168.0.172
+it ran and asked for password
+i pressed enter
+{12}
+this proved
+Server allows sessions using username '', password ''
+and it also Users Dumped (35 accounts)
+
+
+Task 03: Leveraging Nmap Scripting Engine (NSE)
+Description: ●	Use automated scripts to detect vulnerabilities and
+               misconfigurations during the scan. 
+Technical Requirements: 
+○ Run scripts from the 'Discovery' and 'Safe' categories to find additional  info
+ (e.g., http-enum, ssl-cert). 
+○ Execute the 'Vuln' category scripts (--script vuln) on a target machine to
+ identify exploitable vulnerabilities. 
+○ Map the NSE output to specific CVE IDs. 
+●	Learning Goal: 
+Automate the repetitive parts of vulnerability discovery while maintaining 
+control over the scan. 
+If Port 80 (HTTP) is open, we can run the http-enum script.
+lets try that by
+sudo nmap -p 80 --script http-enum 192.168.0.172
+{13}
+this tells us that
+Apache 2.2.8 — ancient, CVEs exist, WebDAV enabled (file upload risk)
+/phpinfo.php — leaks full server config, paths, PHP version
+/phpMyAdmin/ — DB admin panel exposed, try creds from enum4linux
+/tikiwiki/ — old CMS installed, has known RCE vulnerabilities
+/test/ /doc/ /icons/ — directory listing enabled, server structure exposed
+
+These directories may reveal hidden functionality or administrative panels.
+
+Nmap can also run all scripts in a category.
+Discovery scripts
+What "Discovery" Scripts Try To Do
+They all share one goal — find out as much information as possible about the target and surrounding network:
+Query DNS records
+Enumerate SNMP data
+Broadcast on the network to find other devices
+Pull NetBIOS/SMB info
+Check for mDNS, SSDP, IGMP multicast groups
+Sniff network traffic
+Query whois/ASN data
+Enumerate HTTP paths, headers, robots.txt
+Pull SMTP/FTP banners
+
+sudo nmap --script discovery 192.168.0.172
+{14}
+
+Example 2 — SSL Certificate Information
+If Port 443 (HTTPS) is open, we can retrieve SSL certificate details.
+sudo nmap -p 443 --script ssl-cert 192.168.0.172
+we dont have port 443 opened in metasplotable 2
+
+Task 3 Part 2
+Running Vulnerability Scripts
+Basic Command
+sudo nmap --script vuln 192.168.0.172
+{15}
+Note: --script vuln is a "lab only" move. It's one of the first things your course should tell you to never run on a real target without explicit written permission and agreed noise tolerance. The whole point of learning it now is so you understand what it does — not to use it carelessly later.
+
+with this we get
+🔴 Critical — Direct Shell Access
+FTP (port 21) — vsFTPd 2.3.4 backdoor (CVE-2011-2523)
+
+Already confirmed exploitable — nmap ran id and got back uid=0(root)
+You have root without even trying
+
+IRC (port 6667) — UnrealIRCd trojaned backdoor
+
+Another backdoored service, direct shell access
+
+RMI Registry (port 1099) — Remote Code Execution
+
+Default Java RMI config allows loading remote classes = RCE
+
+
+🔴 High — Web Vulnerabilities (port 80)
+
+SQL Injection — dozens of injectable parameters found in /mutillidae/
+CSRF — found on DVWA and Mutillidae login forms
+HTTP TRACE enabled — can be used for credential theft (XST attack)
+Slowloris DoS — Apache vulnerable to connection exhaustion attack
+
+
+🟠 Medium — Crypto/TLS Weaknesses (ports 25, 5432)
+
+SSL POODLE (CVE-2014-3566) — MitM attack possible, found on SMTP and PostgreSQL
+CCS Injection (CVE-2014-0224) — session hijacking via OpenSSL flaw on PostgreSQL
+Weak Diffie-Hellman — 1024-bit keys, susceptible to passive decryption
+
+
+🟡 Low — Misconfigurations
+
+Tomcat on 8180 — /admin/ and /manager/ panels exposed, JSESSIONID cookies missing httponly flag
+WebDAV folder exposed at /webdav/
+SMB vulns (MS10-054, MS10-061) — came back false, not vulnerable
+
+
+Task 03 – Part 3
+Mapping NSE Output to CVE IDs
+Description
+When Nmap vulnerability scripts detect a potential weakness, they often
+ include a CVE ID in the output.
+ A CVE (Common Vulnerabilities and Exposures) ID is a unique identifier
+
+we found following CVEs
+CVE-2011-2523FTP / port 21vsFTPd 2.3.4 backdoor — confirmed root shell
+CVE-2014-3566SMTP / port 25SSL POODLE — MitM padding oracle attack
+CVE-2015-4000SMTP / port 25Logjam — TLS DHE_EXPORT downgrade to 512-bit
+CVE-2014-0224PostgreSQL / port 5432CCS Injection — session hijack via OpenSSL
+CVE-2014-3566PostgreSQL / port 5432SSL POODLE again — same issue on different service
+CVE-2007-6750HTTP / port 8180Slowloris DoS — Apache connection exhaustion
+
+
+Week 02 – Task 04
+Task 04: Stealth & Firewall Evasion Techniques 
+Description: Practice techniques to bypass basic Intrusion Detection Systems (IDS) or Firewalls. 
+Technical Requirements: 
+○ Use Packet Fragmentation (-f) and MTU manipulation to slip past simple packet filters. 
+○ Experiment with Decoys (-D) to hide your actual IP address among a crowd of "fake" scanning IPs. 
+○ Use Source Port Spoofing (--source-port) to bypass firewalls that only allow traffic from specific ports (like DNS/53). 
+Learning Goal: Learn that "Loud" scans get blocked; "Quiet" and "Creative" scans get results.
+
+Technique 1 — Packet Fragmentation (-f)
+sudo nmap -sS -f 192.168.0.172
+What it does
+Splits the scan packets into smaller fragments.
+Helps demonstrate how packet inspection systems handle fragmented traffic.
+although it will produce same result in metasplotable machine, but its useful in real world
+
+Technique 2 — MTU Manipulation
+MTU (Maximum Transmission Unit) controls the size of packets sent over a network.
+Changing MTU alters how packets are divided during transmission.
+Example Command
+sudo nmap -sS --mtu 16 192.168.0.172
+{16}
+What this means
+Forces packets to be very small
+Causes the network stack to fragment packets differently
+
+Task 04 – Part 2
+Decoys and Source Port Manipulation
+Technique 1 — Decoy Scanning (-D)
+Decoy scanning makes it appear as though multiple systems are performing the scan.
+Instead of one IP sending packets, Nmap inserts decoy IP addresses along with the real scanner.
+sudo nmap -sS -D RND:5 192.168.0.172
+-D Enables decoy mode
+RND:5 Generates 5 random decoy IP addresses
+-sS we all know
+allthough in terminal u wont notice any result but in victim side, This causes the target to see traffic coming from multiple IP addresses,
+ making it harder to determine which one is the real scanner.
+ u can change RND:10 and it will make The target system may see scan packets appearing to come from 10 different addresses.
+ 
+ 
+ 
+ Technique 2 — Source Port Manipulation
+ Some firewalls allow traffic from trusted ports such as:
+ 53, 80, 443
+ Nmap allows the scan to appear as if it originates from a specific port.
+ sudo nmap -sS --source-port 53 192.168.0.172
+ {17}
+ This helps demonstrate how simple firewall rules based only on ports can be bypassed in controlled tests.
+ 
+ Normal SYN Scan
+sudo nmap -sS 192.168.0.172
+Decoy Scan
+sudo nmap -sS -D RND:5 192.168.0.172
+Source Port Scan
+sudo nmap -sS --source-port 53 192.168.0.172
+we found that
+╔══════════════════╦══════════════════════╦═══════════════╦═══════════════╦══════════════════════════════════════════════════════╗
+║ Scan Type        ║ Command              ║ Scan Time     ║ Ports Found   ║ Notes                                                ║
+╠══════════════════╬══════════════════════╬═══════════════╬═══════════════╬══════════════════════════════════════════════════════╣
+║ Normal Scan      ║ -sS                  ║ 1.08s         ║ 23            ║ Baseline scan, all ports visible                     ║
+╠══════════════════╬══════════════════════╬═══════════════╬═══════════════╬══════════════════════════════════════════════════════╣
+║ Decoy Scan       ║ -sS -D RND:5         ║ 3.38s         ║ 23            ║ 5 random fake IPs mixed with real traffic,           ║
+║                  ║                      ║               ║               ║ slower due to spoofed packets                        ║
+╠══════════════════╬══════════════════════╬═══════════════╬═══════════════╬══════════════════════════════════════════════════════╣
+║ Source Port Scan ║ -sS --source-port 53 ║ 1.14s         ║ 23            ║ Disguises scan as DNS traffic, same results          ║
+╚══════════════════╩══════════════════════╩═══════════════╩═══════════════╩══════════════════════════════════════════════════════╝
+
+
+deliverabilites:
+Notes  observations or comments
+Weekly Deliverable: The Scanning & Enumeration Report 
+Nmap Output Analysis: Screenshots and explanations of the open ports found. 
+Service Table: A clean table listing: Port, Service Name, Version, and Potential Vulnerabilities. 
+Evasion Results: A short write-up on which stealth flags worked and which were potentially "noisy." 
+Actionable Insights: Which port/service is the most likely "Initial Access" point and why? 

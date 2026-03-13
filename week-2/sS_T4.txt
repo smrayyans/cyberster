@@ -1,0 +1,20 @@
+# Nmap 7.98 scan initiated Sat Mar 14 03:55:21 2026 as: /usr/lib/nmap/nmap -sS -T4 -p 1-1000 -oN sS_T4.txt 192.168.0.172
+Nmap scan report for 192.168.0.172
+Host is up (0.028s latency).
+Not shown: 988 closed tcp ports (reset)
+PORT    STATE SERVICE
+21/tcp  open  ftp
+22/tcp  open  ssh
+23/tcp  open  telnet
+25/tcp  open  smtp
+53/tcp  open  domain
+80/tcp  open  http
+111/tcp open  rpcbind
+139/tcp open  netbios-ssn
+445/tcp open  microsoft-ds
+512/tcp open  exec
+513/tcp open  login
+514/tcp open  shell
+MAC Address: 5C:5F:67:EE:84:D2 (Intel Corporate)
+
+# Nmap done at Sat Mar 14 03:55:22 2026 -- 1 IP address (1 host up) scanned in 1.22 seconds
